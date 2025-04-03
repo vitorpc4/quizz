@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Plus, Sparkles } from "lucide-react";
 import QuestionEditor from "@/Components/Quiz/questionEditor";
+import instance from "@/http";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
+  const [level, setLevel] = useState("advanced");
   const [isGenerating, setIsGenerating] = useState(false);
   const [questions, setQuestions] = useState([]);
 
@@ -17,45 +19,31 @@ export default function QuizPage() {
 
     setIsGenerating(true);
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const body = {
+      topic: topic,
+      level: level,
+    };
 
-    // Mock generated questions
-    const generatedQuestions = [
-      {
-        id: "q1",
-        text: `What is the main purpose of ${topic}?`,
-        answers: [
-          { id: "a1", text: "First possible answer", isCorrect: true },
-          { id: "a2", text: "Second possible answer", isCorrect: false },
-          { id: "a3", text: "Third possible answer", isCorrect: false },
-          { id: "a4", text: "Fourth possible answer", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: `Which of the following is a key component of ${topic}?`,
-        answers: [
-          { id: "a1", text: "Component A", isCorrect: false },
-          { id: "a2", text: "Component B", isCorrect: true },
-          { id: "a3", text: "Component C", isCorrect: false },
-          { id: "a4", text: "Component D", isCorrect: false },
-        ],
-      },
-      {
-        id: "q3",
-        text: `When was ${topic} first introduced?`,
-        answers: [
-          { id: "a1", text: "1990s", isCorrect: false },
-          { id: "a2", text: "2000s", isCorrect: false },
-          { id: "a3", text: "2010s", isCorrect: true },
-          { id: "a4", text: "2020s", isCorrect: false },
-        ],
-      },
-    ];
+    const res = await instance.post("/chat", body);
 
-    setQuestions(generatedQuestions);
+    const formatDataQuest = res.data.questions
+      .replace(/```json/g, "")
+      .replace(/```/g, "");
+
+    const parsedJson = JSON.parse(formatDataQuest);
+
+    setQuestions(parsedJson);
+
     setIsGenerating(false);
+  };
+
+  const generateQuestions2 = async () => {
+    const jsonExample = `
+      ""  
+    `;
+    const parsedJson = JSON.parse(jsonExample);
+
+    setQuestions(parsedJson);
   };
 
   const addQuestion = () => {
@@ -98,6 +86,11 @@ export default function QuizPage() {
                 placeholder="ex: React Hooks, World Geography, Science Fiction"
                 className="flex-1"
               />
+              <Button
+                onClick={generateQuestions2}
+                disabled={!topic.trim() || isGenerating}
+                className="gap-2"
+              ></Button>
               <Button
                 onClick={generateQuestions}
                 disabled={!topic.trim() || isGenerating}

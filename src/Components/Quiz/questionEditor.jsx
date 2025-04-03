@@ -70,7 +70,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
                 <div className="flex items-center gap-2 text-left">
                   <GripVertical className="h-5 w-5 text-muted-foreground" />
                   <span className="font-medium">
-                    {question.text || "New Question"}
+                    {question.option || "New Question"}
                   </span>
                 </div>
               </AccordionTrigger>
@@ -94,7 +94,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
                     </Label>
                     <Textarea
                       id={`question-${question.id}`}
-                      value={question.text}
+                      value={question.option}
                       onChange={(e) => updateQuestionText(e.target.value)}
                       placeholder="Enter your question here"
                       className="mt-1.5"
@@ -126,7 +126,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
                               {answer.isCorrect ? "Correct Answer" : "Option"}
                             </Label>
                             <Input
-                              value={answer.text}
+                              value={answer.option}
                               onChange={(e) =>
                                 updateAnswerText(answer.id, e.target.value)
                               }
