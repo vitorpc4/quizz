@@ -18,7 +18,7 @@ export async function POST(request) {
 
   if (res.data) {
     return NextResponse.json({
-      questions: res.data.choices[0].message.content,
+      questions: `${res.data.choices[0].message.content}`,
       message: "Success",
       success: true,
     });
