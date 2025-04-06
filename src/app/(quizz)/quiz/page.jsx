@@ -59,7 +59,7 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="space-y-6 w-[50rem] ">
+    <div className="space-y-6 w-[50rem]">
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4">
