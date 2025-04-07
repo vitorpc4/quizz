@@ -17,9 +17,7 @@ export default function MainLayout({ children }) {
             <Separator orientation="vertical" className="mr-2 h-4" />
           </header>
 
-          <div className="flex justify-center items-center flex-1">
-            {children}
-          </div>
+          <div>{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </div>
