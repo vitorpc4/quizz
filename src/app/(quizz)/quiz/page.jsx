@@ -26,24 +26,11 @@ export default function QuizPage() {
 
     const res = await instance.post("/chat", body);
 
-    const formatDataQuest = res.data.questions
-      .replace(/```json/g, "")
-      .replace(/```/g, "");
+    const parsedJson = JSON.parse(res.data.questions);
 
-    const parsedJson = JSON.parse(formatDataQuest);
-
-    setQuestions(parsedJson);
+    setQuestions(parsedJson.questions);
 
     setIsGenerating(false);
-  };
-
-  const generateQuestions2 = async () => {
-    const jsonExample = `
-      ""  
-    `;
-    const parsedJson = JSON.parse(jsonExample);
-
-    setQuestions(parsedJson);
   };
 
   const addQuestion = () => {
@@ -72,7 +59,7 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="space-y-6 w-[50rem] ">
+    <div className="space-y-6 w-[50rem]">
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4">
@@ -86,11 +73,6 @@ export default function QuizPage() {
                 placeholder="ex: React Hooks, World Geography, Science Fiction"
                 className="flex-1"
               />
-              <Button
-                onClick={generateQuestions2}
-                disabled={!topic.trim() || isGenerating}
-                className="gap-2"
-              ></Button>
               <Button
                 onClick={generateQuestions}
                 disabled={!topic.trim() || isGenerating}
@@ -121,7 +103,7 @@ export default function QuizPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">
-              Questõesdo Quiz ({questions.length})
+              Questões do Quiz ({questions.length})
             </h2>
             <Button
               onClick={addQuestion}
@@ -132,7 +114,6 @@ export default function QuizPage() {
               <Plus className="h-4 w-4" /> Adicionar questão
             </Button>
           </div>
-
           <div className="space-y-4">
             {questions.map((question) => (
               <QuestionEditor
