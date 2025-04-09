@@ -33,5 +33,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/api/:path*", "/quiz/:path*"]
+  matcher: ["/((?!api/auth|login|register|_next|favicon.ico).*)"],
 };
