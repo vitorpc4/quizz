@@ -1,35 +1,67 @@
-import instance from "@/http/OpenApiAxiosCtx";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const requestBody = await request.json();
 
   const body = {
-    messages: [
+    contents: [
       {
-        role: "user",
-        content: `Generate 10 random questions about ${requestBody.topic} in the provided JSON format. These questions should be suitable for ${requestBody.level} level, and they should cover a wide range of concepts related to the topic. Only one answer can be correct. JSON example:{ "questions": [ { "id": 1, "question": "[INSERT QUESTION HERE]", "explanation": "[INSERT EXPLANATION HERE]", "answers": [ {"id": 1, "option": "[ANSWER 1]", "isCorrect": false}, {"id": 2, "option": "[ANSWER 2]", "isCorrect": false}, {"id": 3, "option": "[ANSWER 3]", "isCorrect": true}, {"id": 4, "option": "[ANSWER 4]", "isCorrect": false} ] }, { "id": 2, "question": "[INSERT QUESTION HERE]", "explanation": "[INSERT EXPLANATION HERE]", "answers": [ {"id": 1, "option": "[ANSWER 1]", "isCorrect": true}, {"id": 2, "option": "[ANSWER 2]", "isCorrect": false}, {"id": 3, "option": "[ANSWER 3]", "isCorrect": false}, {"id": 4, "option": "[ANSWER 4]", "isCorrect": false} ] } ]} For each question, provide an explanation and multiple answer options, ensuring only one option is isCorrect. The inisCorrect answers should also be relevant and well-phrased to challenge the student. Attention only generate the json do not use markdown for anything. GENERATE ONLY THE JSON.`,
+        parts: [
+          {
+            text: `Generate 1 random question about ${requestBody.topic} in strict JSON format. Follow exactly this structure:
+{
+  "questions": [
+    {
+      "question": "[QUESTION]",
+      "explanation": "[EXPLANATION]",
+      "answers": [
+        {"option": "[OPTION 1]", "correct": false},
+        {"option": "[OPTION 2]", "correct": false},
+        {"option": "[OPTION 3]", "correct": true},
+        {"option": "[OPTION 4]", "correct": false}
+      ]
+    }
+  ]
+}
+
+Requirements:
+- Suitable for ${requestBody.level} level
+- Only one correct answer
+- Return ONLY RAW JSON without any formatting, backticks, or markdown
+- Keep JSON properties lowercase`
+          }
+        ],
       },
     ],
-    model: "llama-3.3-70b-versatile",
+    generation_config: {
+      response_mime_type: "application/json",
+      temperature: 0.7 // Ajuste conforme necessidade
+    }
   };
 
-  const res = await instance.post("/v1/chat/completions", body);
+  try {
+    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
-  if (res.data) {
-    return NextResponse.json({
-      questions: `${res.data.choices[0].message.content}`,
-      message: "Success",
-      success: true,
-    });
-  } else {
-    return NextResponse.json(
-      {
-        questions: "",
-        message: "Failure",
-        sucess: false,
+    const response = await fetch(`${endpoint}?key=${process.env.GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      { status: 400 }
-    );
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return NextResponse.json({message: errorData.error.message, success: false});
+    }
+
+    const data = await response.json();
+    console.log(data.candidates[0].content.parts[0].text);
+
+    // TODO: armazenar quiz no banco de dados
+
+  } catch (error) {
+    console.error('Erro ao chamar a API Gemini:', error);
+    return NextResponse.json({message: error, success: false});
   }
 }

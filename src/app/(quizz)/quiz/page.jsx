@@ -24,7 +24,13 @@ export default function QuizPage() {
       level: level,
     };
 
-    const res = await instance.post("/chat", body);
+    const res = await instance.post("/api/chat", body);
+
+    if(!res.data.success){
+      alert(res.data.message);
+      setIsGenerating(false);
+      return;
+    }
 
     const parsedJson = JSON.parse(res.data.questions);
 
