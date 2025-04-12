@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Plus, Sparkles } from "lucide-react";
 import QuestionEditor from "@/Components/Quiz/questionEditor";
 import instance from "@/http";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
   const [level, setLevel] = useState("advanced");
   const [isGenerating, setIsGenerating] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [selectedModel, setSelectedModel] = useState();
 
   const generateQuestions = async () => {
     if (!topic.trim()) return;
@@ -24,9 +33,15 @@ export default function QuizPage() {
       level: level,
     };
 
-    const res = await instance.post("/api/chat", body);
+    let res;
 
-    if(!res.data.success){
+    if (selectedModel === "Gemini") {
+      res = await instance.post("/chat", body);
+    } else {
+      res = await instance.post("/chat/openapi", body);
+    }
+
+    if (!res.data.success) {
       alert(res.data.message);
       setIsGenerating(false);
       return;
@@ -64,8 +79,39 @@ export default function QuizPage() {
     setQuestions(questions.filter((q) => q.id !== questionId));
   };
 
+  const onSelectModelChange = (value) => {
+    localStorage.setItem("modelAI", value);
+    setSelectedModel(value);
+  };
+
+  useEffect(() => {
+    const modelAI = localStorage.getItem("modelAI");
+    console.log("tem modelo papair: ", modelAI);
+
+    if (modelAI) {
+      setSelectedModel(modelAI);
+    }
+  }, [selectedModel]);
+
   return (
     <div className="space-y-6 w-[50rem]">
+      <div className="flex justify-end">
+        <Select
+          value={selectedModel}
+          onValueChange={(e) => onSelectModelChange(e)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Modelo IA" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="Groq">Groq</SelectItem>
+              <SelectItem value="Gemini">Gemini</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4">
@@ -81,7 +127,7 @@ export default function QuizPage() {
               />
               <Button
                 onClick={generateQuestions}
-                disabled={!topic.trim() || isGenerating}
+                disabled={!topic.trim() || isGenerating || !selectedModel}
                 className="gap-2"
               >
                 {isGenerating ? (
