@@ -64,8 +64,6 @@ export async function POST(request) {
 
     const data = await response.json();
     console.log(data.candidates[0].content.parts[0].text);
-
-    // TODO: armazenar quiz no banco de dados
   } catch (error) {
     console.error("Erro ao chamar a API Gemini:", error);
     return NextResponse.json({ message: error, success: false });
