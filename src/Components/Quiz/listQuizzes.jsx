@@ -89,7 +89,7 @@ export default function ListQuizzesComponent(quizzez) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={colums.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No data available
               </TableCell>
             </TableRow>

@@ -24,6 +24,7 @@ export const QuizzesTable = pgTable(
   "quizzes",
   {
     id: uuid().primaryKey().defaultRandom(),
+    name: varchar({ length: 255 }).notNull(),
     quiz: jsonb().notNull(),
     userId: uuid().notNull(),
     createdDate: timestamp().notNull().defaultNow(),
