@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
+import { toast } from "sonner";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
@@ -22,6 +23,7 @@ export default function QuizPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [selectedModel, setSelectedModel] = useState();
+  const [quizz, setQuizz] = useState({});
 
   const generateQuestions = async () => {
     if (!topic.trim()) return;
@@ -84,9 +86,69 @@ export default function QuizPage() {
     setSelectedModel(value);
   };
 
+  const updateQuizz = async () => {
+    const updatedQuizz = {
+      quiz: questions,
+    };
+
+    const res = await instance.put(`/quiz/${quizz.id}`, updatedQuizz);
+
+    if (res.data) {
+      toast("Quizz Atualizado", {
+        description: "Quizz atualizado com sucesso",
+        duration: 2000,
+        position: "top-right",
+      });
+    } else {
+      toast("Erro ao atualizar quizz", {
+        description: "Erro ao atualizar quizz",
+        duration: 2000,
+        position: "top-right",
+      });
+    }
+  };
+
+  const createQuizz = async () => {
+    const userId = localStorage.getItem("userId");
+
+    const newQuizz = {
+      quiz: questions,
+      userId: userId,
+    };
+    const res = await instance.post("/quiz", newQuizz);
+
+    if (res.data) {
+      setQuizz({
+        id: res.data.id,
+        quiz: questions,
+        userId: userId,
+      });
+
+      toast("Quizz Criado", {
+        description: "Quizz criado com sucesso",
+        duration: 2000,
+        position: "top-right",
+      });
+    } else {
+      toast("Erro ao criar quizz", {
+        description: "Erro ao criar quizz",
+        duration: 2000,
+        position: "top-right",
+      });
+    }
+  };
+
+  const saveQuizz = async () => {
+    if (quizz.id) {
+      updateQuizz();
+      return;
+    }
+
+    createQuizz();
+  };
+
   useEffect(() => {
     const modelAI = localStorage.getItem("modelAI");
-    console.log("tem modelo papair: ", modelAI);
 
     if (modelAI) {
       setSelectedModel(modelAI);
@@ -178,7 +240,9 @@ export default function QuizPage() {
           </div>
 
           <div className="flex justify-end pt-4">
-            <Button className="gap-2">Salvar Quiz</Button>
+            <Button onClick={saveQuizz} className="gap-2">
+              Salvar Quiz
+            </Button>
           </div>
         </div>
       )}
