@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { QuizzesTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export default class QuizzRepository {
   async getQuizzes() {
@@ -7,18 +8,33 @@ export default class QuizzRepository {
   }
 
   async getQuizById(id) {
-    return await db.select().from(QuizzesTable).where({ id }).execute();
+    return await db
+      .select()
+      .from(QuizzesTable)
+      .where(eq(QuizzesTable.id, id))
+      .execute();
   }
 
   async createQuiz(quiz) {
-    return await db.insert(QuizzesTable).values(quiz).execute();
+    return await db
+      .insert(QuizzesTable)
+      .values(quiz)
+      .returning({ id: QuizzesTable.id });
   }
 
   async updateQuiz(id, quiz) {
-    return await db.update(QuizzesTable).set(quiz).where({ id }).execute();
+    return await db
+      .update(QuizzesTable)
+      .set(quiz)
+      .where(eq(QuizzesTable.id, id))
+      .execute();
   }
 
   async deleteQuiz(id) {
-    return await db.delete().from(QuizzesTable).where({ id }).execute();
+    return await db
+      .delete()
+      .from(QuizzesTable)
+      .where(eq(QuizzesTable.id, id))
+      .execute();
   }
 }
