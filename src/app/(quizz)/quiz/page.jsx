@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import { toast } from "sonner";
+import SetNameQuizzDialog from "@/Components/Quiz/SetNameQuizz";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
@@ -24,6 +25,7 @@ export default function QuizPage() {
   const [questions, setQuestions] = useState([]);
   const [selectedModel, setSelectedModel] = useState();
   const [quizz, setQuizz] = useState({});
+  const [isOpenSave, setIsOpenSave] = useState(false);
 
   const generateQuestions = async () => {
     if (!topic.trim()) return;
@@ -108,10 +110,11 @@ export default function QuizPage() {
     }
   };
 
-  const createQuizz = async () => {
+  const createQuizz = async (name) => {
     const userId = localStorage.getItem("userId");
 
     const newQuizz = {
+      name: name,
       quiz: questions,
       userId: userId,
     };
@@ -120,6 +123,7 @@ export default function QuizPage() {
     if (res.data) {
       setQuizz({
         id: res.data.id,
+        name: name,
         quiz: questions,
         userId: userId,
       });
@@ -138,13 +142,18 @@ export default function QuizPage() {
     }
   };
 
-  const saveQuizz = async () => {
+  const saveQuizz = async (name) => {
     if (quizz.id) {
       updateQuizz();
       return;
     }
 
-    createQuizz();
+    createQuizz(name);
+  };
+
+  const onSetName = (name) => {
+    setIsOpenSave(false);
+    saveQuizz(name);
   };
 
   useEffect(() => {
@@ -240,9 +249,10 @@ export default function QuizPage() {
           </div>
 
           <div className="flex justify-end pt-4">
-            <Button onClick={saveQuizz} className="gap-2">
+            {/* <Button onClick={saveQuizz} className="gap-2">
               Salvar Quiz
-            </Button>
+            </Button> */}
+            <SetNameQuizzDialog open={isOpenSave} onSetName={onSetName} />
           </div>
         </div>
       )}
