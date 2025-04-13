@@ -1,16 +1,24 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
+import QuizzRepository from "../../../../../backend/Infra/Repository/QuizzRepository";
+
+const quizzRepository = new QuizzRepository();
 
 export async function GET(req, { params }) {
   if (!params || !params.id) {
-    return NextResponse.json({ error: "ID do quiz não informado" }, { status: 400 });
+    return NextResponse.json(
+      { error: "ID do quiz não informado" },
+      { status: 400 }
+    );
   }
 
   const quiz = await db
     .select()
     .from(QuizzesTable)
-    .where(and(eq(QuizzesTable.id, params.id), isNull(QuizzesTable.deletedDate)))
+    .where(
+      and(eq(QuizzesTable.id, params.id), isNull(QuizzesTable.deletedDate))
+    )
     .limit(1)
     .execute();
 
@@ -21,13 +29,11 @@ export async function GET(req, { params }) {
   return NextResponse.json(quiz[0]);
 }
 
-
 export async function PUT(req, { params }) {
-  if (!params || !params.id) {
-    return NextResponse.json({ error: "ID do quiz não informado" }, { status: 400 });
-  }
+  const { id } = await params;
 
   const body = await req.json();
+
   const { quiz } = body;
 
   if (!quiz) {
@@ -35,22 +41,40 @@ export async function PUT(req, { params }) {
   }
 
   try {
-    await db
-      .update(QuizzesTable)
-      .set({ quiz, updatedDate: new Date() })
-      .where(and(eq(QuizzesTable.id, params.id), isNull(QuizzesTable.deletedDate)))
-      .execute();
+    const searchQuizz = await quizzRepository.getQuizById(id);
+    if (!searchQuizz) {
+      return NextResponse.json(
+        { error: "Quiz não encontrado" },
+        { status: 404 }
+      );
+    }
 
-    return NextResponse.json({ message: "Quiz atualizado com sucesso" });
+    searchQuizz.quiz = quiz;
+
+    const result = await quizzRepository.updateQuiz(id, searchQuizz);
+
+    if (result) {
+      return NextResponse.json({ success: true }, { status: 200 });
+    } else {
+      return NextResponse.json(
+        { error: "Quiz não encontrado" },
+        { status: 404 }
+      );
+    }
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao atualizar quiz" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao atualizar quiz" },
+      { status: 500 }
+    );
   }
 }
 
-
 export async function DELETE(req, { params }) {
   if (!params || !params.id) {
-    return NextResponse.json({ error: "ID do quiz não informado" }, { status: 400 });
+    return NextResponse.json(
+      { error: "ID do quiz não informado" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -60,8 +84,13 @@ export async function DELETE(req, { params }) {
       .where(eq(QuizzesTable.id, params.id))
       .execute();
 
-    return NextResponse.json({ message: "Quiz removido com sucesso (soft delete)" });
+    return NextResponse.json({
+      message: "Quiz removido com sucesso (soft delete)",
+    });
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao remover quiz" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao remover quiz" },
+      { status: 500 }
+    );
   }
 }
