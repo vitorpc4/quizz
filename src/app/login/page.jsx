@@ -25,6 +25,8 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
+        localStorage.setItem("userId", data.result.userId);
+
         router.push("/quiz");
       } else {
         alert(data.error || "Erro ao fazer login");

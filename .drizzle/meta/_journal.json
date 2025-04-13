@@ -8,6 +8,13 @@
       "when": 1743365320442,
       "tag": "0000_brown_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1744509550883,
+      "tag": "0001_right_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

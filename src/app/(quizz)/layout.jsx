@@ -10,22 +10,21 @@ import {
 } from "@/Components/ui/sidebar";
 
 export default function MainLayout({ children }) {
-
   const router = useRouter();
-  
+
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth", 
-        { method: "POST", 
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "logout" })
-        });
+      await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "logout" }),
+      });
+      localStorage.removeItem("userId");
       router.push("/login");
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
     }
   };
-  
 
   return (
     <div>

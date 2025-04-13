@@ -1,4 +1,3 @@
-
 import { boolean } from "drizzle-orm/gel-core";
 import {
   date,
@@ -6,6 +5,7 @@ import {
   integer,
   jsonb,
   pgTable,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -15,9 +15,9 @@ export const usersTable = pgTable("users", {
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
-  createdDate: date().notNull().defaultNow(),
-  updatedDate: date(),
-  deletedDate: date(),
+  createdDate: timestamp().notNull().defaultNow(),
+  updatedDate: timestamp(),
+  deletedDate: timestamp(),
 });
 
 export const QuizzesTable = pgTable(
@@ -26,9 +26,9 @@ export const QuizzesTable = pgTable(
     id: uuid().primaryKey().defaultRandom(),
     quiz: jsonb().notNull(),
     userId: uuid().notNull(),
-    createdDate: date().notNull().defaultNow(),
-    updatedDate: date(),
-    deletedDate: date(),
+    createdDate: timestamp().notNull().defaultNow(),
+    updatedDate: timestamp(),
+    deletedDate: timestamp(),
   },
   (table) => [
     foreignKey({
@@ -46,7 +46,7 @@ export const EvaluationsTable = pgTable(
     email: varchar({ length: 255 }).notNull(),
     answers: jsonb().notNull(),
     quizId: uuid().notNull(),
-    createdDate: date().notNull().defaultNow(),
+    createdDate: timestamp().notNull().defaultNow(),
   },
   (table) => [
     foreignKey({
@@ -64,7 +64,7 @@ export const SharedQuizzesTable = pgTable(
     userId: uuid().notNull(),
     quizId: uuid().notNull(),
     edit: boolean().notNull(),
-    createdDate: date().notNull().defaultNow(),
+    createdDate: timestamp().notNull().defaultNow(),
   },
   (table) => [
     foreignKey({
