@@ -8,17 +8,18 @@ export async function POST(request) {
       {
         parts: [
           {
-            text: `Generate 1 random question about ${requestBody.topic} in strict JSON format. Follow exactly this structure:
+            text: `Generate 5 random questions about ${requestBody.topic} in strict JSON format. Follow exactly this structure:
           {
             "questions": [
               {
+                "id": "[INCREMENT INTEGER]",
                 "question": "[QUESTION]",
                 "explanation": "[EXPLANATION]",
                 "answers": [
-                  {"option": "[OPTION 1]", "correct": false},
-                  {"option": "[OPTION 2]", "correct": false},
-                  {"option": "[OPTION 3]", "correct": true},
-                  {"option": "[OPTION 4]", "correct": false}
+                  {"id": 1, "option": "[OPTION 1]", "correct": false},
+                  {"id": 2, "option": "[OPTION 2]", "correct": false},
+                  {"id": 3, "option": "[OPTION 3]", "correct": true},
+                  {"id": 4, "option": "[OPTION 4]", "correct": false}
                 ]
               }
             ]
@@ -34,8 +35,7 @@ export async function POST(request) {
       },
     ],
     generation_config: {
-      response_mime_type: "application/json",
-      temperature: 0.7, // Ajuste conforme necessidade
+      response_mime_type: "application/json"
     },
   };
 
@@ -64,6 +64,13 @@ export async function POST(request) {
 
     const data = await response.json();
     console.log(data.candidates[0].content.parts[0].text);
+
+    return NextResponse.json({
+      questions: data.candidates[0].content.parts[0].text,
+      message: "Success",
+      success: true,
+    });
+
   } catch (error) {
     console.error("Erro ao chamar a API Gemini:", error);
     return NextResponse.json({ message: error, success: false });
