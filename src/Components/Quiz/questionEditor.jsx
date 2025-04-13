@@ -70,7 +70,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
                 <div className="flex items-center gap-2 text-left">
                   <GripVertical className="h-5 w-5 text-muted-foreground" />
                   <span className="font-medium">
-                    {question.option || "New Question"}
+                    {question.question || "New Question"}
                   </span>
                 </div>
               </AccordionTrigger>
