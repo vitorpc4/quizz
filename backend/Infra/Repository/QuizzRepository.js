@@ -8,11 +8,7 @@ export default class QuizzRepository {
   }
 
   async getQuizById(id) {
-    return await db
-      .select()
-      .from(QuizzesTable)
-      .where(eq(QuizzesTable.id, id))
-      .execute();
+    return await db.select().from(QuizzesTable).where(eq(QuizzesTable.id, id));
   }
 
   async createQuiz(quiz) {
