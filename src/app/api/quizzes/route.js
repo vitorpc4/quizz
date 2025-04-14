@@ -15,8 +15,6 @@ export async function GET(req) {
     }
 
     return NextResponse.json(quizzes, { status: 200 });
-
-    return NextResponse.json(quizzes, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Erro ao buscar quizzes" },

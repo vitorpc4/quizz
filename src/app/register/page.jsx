@@ -23,6 +23,7 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
+        localStorage.setItem("userId", data.token.userId);
         router.push("/quiz");
       } else {
         alert(data.error || "Erro ao cadastrar");

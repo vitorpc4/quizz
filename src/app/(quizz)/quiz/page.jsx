@@ -222,7 +222,7 @@ export default function QuizPage() {
         </CardContent>
       </Card>
 
-      {questions.length > 0 && (
+      {questions && questions.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">
