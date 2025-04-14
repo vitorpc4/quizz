@@ -6,27 +6,27 @@ import QuizzRepository from "../../../../../backend/Infra/Repository/QuizzReposi
 const quizzRepository = new QuizzRepository();
 
 export async function GET(req, { params }) {
-  if (!params || !params.id) {
+  const id = (await params).id;
+
+  if (!id) {
     return NextResponse.json(
       { error: "ID do quiz não informado" },
       { status: 400 }
     );
   }
 
-  const quiz = await db
-    .select()
-    .from(QuizzesTable)
-    .where(
-      and(eq(QuizzesTable.id, params.id), isNull(QuizzesTable.deletedDate))
-    )
-    .limit(1)
-    .execute();
+  const quiz = await quizzRepository.getQuizById(id);
 
   if (!quiz || quiz.length === 0) {
     return NextResponse.json({ error: "Quiz não encontrado" }, { status: 404 });
   }
 
-  return NextResponse.json(quiz[0]);
+  return NextResponse.json(
+    {
+      quiz: quiz[0],
+    },
+    { status: 200 }
+  );
 }
 
 export async function PUT(req, { params }) {
@@ -34,9 +34,9 @@ export async function PUT(req, { params }) {
 
   const body = await req.json();
 
-  const { quiz } = body;
+  const { quiz, name } = body;
 
-  if (!quiz) {
+  if (!quiz || !name) {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }
 
@@ -49,6 +49,7 @@ export async function PUT(req, { params }) {
       );
     }
 
+    searchQuizz.name = name;
     searchQuizz.quiz = quiz;
 
     const result = await quizzRepository.updateQuiz(id, searchQuizz);

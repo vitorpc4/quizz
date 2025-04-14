@@ -16,8 +16,8 @@ import { Label } from "../ui/label";
 
 // Send data for dad component
 
-export default function SetNameQuizzDialog({ onSetName, open }) {
-  const [name, setName] = useState("");
+export default function SetNameQuizzDialog({ onSetName, nameOnEdit, open }) {
+  const [name, setName] = useState(nameOnEdit);
   const [errors, setErrors] = useState({});
   const [isOpen, setIsOpen] = useState(open);
 
@@ -46,7 +46,7 @@ export default function SetNameQuizzDialog({ onSetName, open }) {
   };
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" onClick={() => setIsOpen(true)}>
           Salvar
