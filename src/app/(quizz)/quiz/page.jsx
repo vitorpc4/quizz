@@ -249,10 +249,11 @@ export default function QuizPage() {
           </div>
 
           <div className="flex justify-end pt-4">
-            {/* <Button onClick={saveQuizz} className="gap-2">
-              Salvar Quiz
-            </Button> */}
-            <SetNameQuizzDialog open={isOpenSave} onSetName={onSetName} />
+            <SetNameQuizzDialog
+              open={isOpenSave}
+              nameOnEdit={quizz.name || ""}
+              onSetName={onSetName}
+            />
           </div>
         </div>
       )}
