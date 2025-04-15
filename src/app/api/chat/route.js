@@ -29,7 +29,7 @@ export async function POST(request) {
           - Suitable for ${requestBody.level} level
           - Only one correct answer
           - Return ONLY RAW JSON without any formatting, backticks, or markdown
-          - Keep JSON properties lowercase`,
+          - YOUR RESPONSE WILL BE PARSED DIRECTLY BY A JSON PARSER.`,
           },
         ],
       },
