@@ -27,10 +27,6 @@ export default class QuizzRepository {
   }
 
   async deleteQuiz(id) {
-    return await db
-      .delete()
-      .from(QuizzesTable)
-      .where(eq(QuizzesTable.id, id))
-      .execute();
+    return await db.delete(QuizzesTable).where(eq(QuizzesTable.id, id));
   }
 }
