@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PUBLIC_PATHS = ["/login", "/register", "/api/auth"];
+const PUBLIC_PATHS = ["/login", "/register", "/api/auth", "/takequizz", "/api/quiz"];
 
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
