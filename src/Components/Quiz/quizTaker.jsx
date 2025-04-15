@@ -15,7 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import instance from "@/http";
 
-export default function QuizTaker({ quizz }) {
+export default function QuizTaker({ quizz, email }) {
   const [quiz, setQuiz] = useState(quizz.quiz);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -76,7 +76,7 @@ export default function QuizTaker({ quizz }) {
 
   const saveEvaluation = async () => {
     const evaluation = {
-      email: 'teste@teste.com',
+      email: email,
       answers: selectedAnswers,
       quizId: quizz.id,
     };
@@ -178,9 +178,6 @@ export default function QuizTaker({ quizz }) {
           <CardFooter className="flex justify-center gap-4">
             <Button variant="outline" onClick={handleRestartQuiz}>
               Take Quiz Again
-            </Button>
-            <Button onClick={() => (window.location.href = "/")}>
-              Back to Home
             </Button>
           </CardFooter>
         </Card>
