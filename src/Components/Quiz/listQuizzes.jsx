@@ -53,6 +53,23 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
     }
   };
 
+  const generateLink = () => {
+    const link = `${window.location.origin}/takequizz/${quizzez[0].id}`;
+
+    navigator.clipboard.writeText(link).then(
+      () => {
+        toast.success("Link copiado para a área de transferência", {
+          duration: 2000,
+        });
+      },
+      (err) => {
+        toast.error("Erro ao copiar o link", {
+          duration: 2000,
+        });
+      }
+    );
+  };
+
   const columns = [
     {
       accessorKey: "id",
@@ -83,9 +100,12 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => deleteQuizz(quizz.id)}>
                 Deletar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={generateLink}>
+                Gerar Link
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
