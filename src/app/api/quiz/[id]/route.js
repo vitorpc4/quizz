@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db/index";
-import { eq } from "drizzle-orm";
 import QuizzRepository from "../../../../../backend/Infra/Repository/QuizzRepository";
 
 const quizzRepository = new QuizzRepository();
@@ -71,7 +69,9 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  if (!params || !params.id) {
+  const id = (await params).id;
+
+  if (!id) {
     return NextResponse.json(
       { error: "ID do quiz não informado" },
       { status: 400 }
@@ -79,15 +79,9 @@ export async function DELETE(req, { params }) {
   }
 
   try {
-    await db
-      .update(QuizzesTable)
-      .set({ deletedDate: new Date() })
-      .where(eq(QuizzesTable.id, params.id))
-      .execute();
+    await quizzRepository.deleteQuiz(id);
 
-    return NextResponse.json({
-      message: "Quiz removido com sucesso (soft delete)",
-    });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return NextResponse.json(
       { error: "Erro ao remover quiz" },
