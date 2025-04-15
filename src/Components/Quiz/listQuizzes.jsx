@@ -28,13 +28,30 @@ import {
 } from "../ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
+import instance from "@/http";
+import { toast } from "sonner";
 
-export default function ListQuizzesComponent(quizzez) {
+export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const router = useRouter();
+
+  const deleteQuizz = async (id) => {
+    const response = await instance.delete(`/quiz/${id}`);
+
+    if (response.status === 204) {
+      toast.success("Quiz deletado com sucesso", {
+        duration: 2000,
+      });
+      deletedQuizz();
+    } else {
+      toast.error("Erro ao deletar quiz", {
+        duration: 2000,
+      });
+    }
+  };
 
   const columns = [
     {
@@ -67,7 +84,9 @@ export default function ListQuizzesComponent(quizzez) {
                 Edit
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Deletar</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => deleteQuizz(quizz.id)}>
+                Deletar
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -76,7 +95,7 @@ export default function ListQuizzesComponent(quizzez) {
   ];
 
   const table = useReactTable({
-    data: quizzez.quizzez,
+    data: quizzez,
     columns: columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
