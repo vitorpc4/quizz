@@ -6,6 +6,7 @@ import instance from "@/http";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Quizzes() {
   const router = useRouter();
@@ -18,7 +19,9 @@ export default function Quizzes() {
     if (response.status === 200) {
       return response.data;
     } else {
-      throw new Error("Erro ao buscar quizzes");
+      toast.error("Erro ao buscar quizzes", {
+        duration: 2000,
+      });
     }
   };
 
@@ -26,11 +29,15 @@ export default function Quizzes() {
     router.push("/quiz");
   };
 
+  const quizzDeleted = async () => {
+    const response = await getQuizzes();
+    setQuizzes(response);
+  };
+
   useEffect(() => {
-    const result = getQuizzes()
+    getQuizzes()
       .then((res) => {
         setQuizzes(res);
-        console.log(res);
       })
       .catch((err) => {
         console.error(err);
@@ -44,7 +51,7 @@ export default function Quizzes() {
       </div>
       <div className="flex justify-center p-4">
         <div className="w-full">
-          <ListQuizzesComponent quizzez={quizzes} />
+          <ListQuizzesComponent quizzez={quizzes} deletedQuizz={quizzDeleted} />
         </div>
       </div>
     </div>
