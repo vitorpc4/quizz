@@ -16,10 +16,10 @@ export async function POST(request) {
                 "question": "[QUESTION]",
                 "explanation": "[EXPLANATION]",
                 "answers": [
-                  {"id": 1, "option": "[OPTION 1]", "correct": false},
-                  {"id": 2, "option": "[OPTION 2]", "correct": false},
-                  {"id": 3, "option": "[OPTION 3]", "correct": true},
-                  {"id": 4, "option": "[OPTION 4]", "correct": false}
+                  {"id": 1, "option": "[OPTION 1]", "isCorrect": false},
+                  {"id": 2, "option": "[OPTION 2]", "isCorrect": false},
+                  {"id": 3, "option": "[OPTION 3]", "isCorrect": true},
+                  {"id": 4, "option": "[OPTION 4]", "isCorrect": false}
                 ]
               }
             ]
