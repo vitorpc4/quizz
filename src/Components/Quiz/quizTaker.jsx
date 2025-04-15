@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import instance from "@/http";
 
 export default function QuizTaker({ quizz }) {
   const [quiz, setQuiz] = useState(quizz.quiz);
@@ -37,6 +38,7 @@ export default function QuizTaker({ quizz }) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       calculateScore();
+      saveEvaluation();
       setIsCompleted(true);
     }
   };
@@ -70,6 +72,22 @@ export default function QuizTaker({ quizz }) {
     setSelectedAnswers({});
     setIsCompleted(false);
     setScore(0);
+  };
+
+  const saveEvaluation = async () => {
+    const evaluation = {
+      email: 'teste@teste.com',
+      answers: selectedAnswers,
+      quizId: quizz.id,
+    };
+    const res = await instance.post("/evaluation", evaluation);
+
+    if (res.data) {
+      console.log('Avaliação salva.');
+      console.log(res);
+    } else {
+      console.log('Erro ao salvar avaliação');
+    }
   };
 
   if (!quiz) {
