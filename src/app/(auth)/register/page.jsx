@@ -3,34 +3,36 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import instance from "@/http";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [errors, setErrors] = useState({});
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
 
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, type: "register" }),
+      const res = await instance.post("/auth", {
+        name,
+        email,
+        password,
+        type: "register",
       });
 
-      const data = await res.json();
+      localStorage.setItem("userId", res.data.token.userId);
+      router.push("/quiz");
 
-      if (res.ok) {
-        localStorage.setItem("userId", data.token.userId);
-        router.push("/quiz");
-      } else {
-        alert(data.error || "Erro ao cadastrar");
-      }
     } catch (err) {
-      console.error(err);
-      alert("Erro na requisição");
+      if (err.response?.data?.errors) {
+        setErrors(err.response.data.errors);
+      } else {
+        setErrors({ form: ["Erro ao cadastrar. Tente novamente."] });
+      }
     }
   };
 
@@ -46,6 +48,9 @@ export default function RegisterPage() {
           className="border p-2 rounded w-full"
           required
         />
+        {errors.name && (
+          <span className="text-red-400 text-sm mt-1">{errors.name[0]}</span>
+        )}
         <input
           type="email"
           placeholder="E-mail"
@@ -54,6 +59,9 @@ export default function RegisterPage() {
           className="border p-2 rounded w-full"
           required
         />
+        {errors.email && (
+          <span className="text-red-400 text-sm mt-1">{errors.email[0]}</span>
+        )}
         <input
           type="password"
           placeholder="Senha"
@@ -62,9 +70,15 @@ export default function RegisterPage() {
           className="border p-2 rounded w-full"
           required
         />
+        {errors.password && (
+          <span className="text-red-400 text-sm mt-1">{errors.password[0]}</span>
+        )}
         <button type="submit" className="bg-gray-500 text-white p-2 rounded hover:bg-black">
           Cadastrar
         </button>
+        {errors.form && (
+          <div className="text-red-400 text-sm mt-2">{errors.form[0]}</div>
+        )}
       </form>
       <p className="mt-4 text-sm">
         Já tem uma conta?{" "}

@@ -1,28 +1,29 @@
 "use client";
-import AppSidebar from "@/Components/app-sidebar";
-import { Separator } from "@/Components/ui/separator";
-import { Button } from "@/Components/ui/button";
+import AppSidebar from "@/components/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import instance from "@/http";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/Components/ui/sidebar";
+} from "@/components/ui/sidebar";
 
 export default function MainLayout({ children }) {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "logout" }),
+      await instance.post("/auth", {
+        type: "logout",
       });
+
       localStorage.removeItem("userId");
       router.push("/login");
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
+      alert(err.response?.data?.error || "Erro ao fazer logout");
     }
   };
 

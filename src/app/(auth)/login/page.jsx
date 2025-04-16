@@ -3,37 +3,30 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import instance from "@/http";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoginError("");
 
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password,
-          type: "login",
-        }),
+      const res = await instance.post("/auth", {
+        email,
+        password,
+        type: "login",
       });
-      const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("userId", data.result.userId);
+      localStorage.setItem("userId", res.data.result.userId);
+      router.push("/quiz");
 
-        router.push("/quiz");
-      } else {
-        alert(data.error || "Erro ao fazer login");
-      }
     } catch (err) {
-      console.error(err);
-      alert("Erro na requisição");
+      setLoginError("Credenciais inválidas");
     }
   };
 
@@ -64,6 +57,9 @@ export default function LoginPage() {
           Entrar
         </button>
       </form>
+      {loginError && (
+        <p className="text-red-500 text-sm mt-4">{loginError}</p>
+      )}
       <p className="mt-4 text-sm text-gray-200">
         Não tem uma conta?{" "}
         <Link href="/register" className="text-gray-500 hover:underline">

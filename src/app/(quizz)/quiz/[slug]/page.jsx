@@ -1,9 +1,8 @@
 "use client";
 
-import QuestionEditor from "@/Components/Quiz/questionEditor";
-import SetNameQuizzDialog from "@/Components/Quiz/SetNameQuizz";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent } from "@/Components/ui/card";
+import QuestionEditor from "@/components/Quiz/questionEditor";
+import SetNameQuizzDialog from "@/components/Quiz/setNameQuizz";
+import { Button } from "@/components/ui/button";
 import instance from "@/http";
 import { Plus } from "lucide-react";
 import { use, useEffect, useState } from "react";

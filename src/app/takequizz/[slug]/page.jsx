@@ -1,7 +1,7 @@
 "use client";
 
-import AuthenticationQuizz from "@/Components/Quiz/authenticationQuizz";
-import QuizTaker from "@/Components/Quiz/quizTaker";
+import AuthenticationQuizz from "@/components/Quiz/authenticationQuizz";
+import QuizTaker from "@/components/Quiz/quizTaker";
 import instance from "@/http";
 import { use, useEffect, useState } from "react";
 

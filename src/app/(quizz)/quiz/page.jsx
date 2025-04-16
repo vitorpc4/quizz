@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Plus, Sparkles } from "lucide-react";
-import QuestionEditor from "@/Components/Quiz/questionEditor";
+import QuestionEditor from "@/components/Quiz/questionEditor";
 import instance from "@/http";
 import {
   Select,
@@ -14,9 +14,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import SetNameQuizzDialog from "@/Components/Quiz/SetNameQuizz";
+import SetNameQuizzDialog from "@/components/Quiz/setNameQuizz";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");

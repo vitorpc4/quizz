@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { decrypt } from "./lib/jwt";
 
 const PUBLIC_PATHS = ["/login", "/register", "/api/auth", "/takequizz", "/api/quiz"];
 
@@ -20,9 +21,7 @@ export async function middleware(req) {
 
   try {
     
-    await jwtVerify(session, SECRET, {
-      algorithms: ["HS256"],
-    });
+    await decrypt(session);
     return NextResponse.next();
     
   } catch (err) {

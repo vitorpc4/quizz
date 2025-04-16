@@ -75,19 +75,37 @@ export default function QuizTaker({ quizz, email }) {
   };
 
   const saveEvaluation = async () => {
-    const evaluation = {
-      email: email,
-      answers: selectedAnswers,
-      quizId: quizz.id,
-    };
-    const res = await instance.post("/evaluation", evaluation);
 
-    if (res.data) {
-      console.log('Avaliação salva.');
-      console.log(res);
-    } else {
-      console.log('Erro ao salvar avaliação');
+    try {
+
+      if (!email) {
+        console.error("E-mail é obrigatório");
+        return;
+      }
+  
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        console.error("Formato do e-mail inválido!");
+        return;
+      }
+
+      const evaluation = {
+        email: email,
+        answers: selectedAnswers,
+        quizId: quizz.id,
+      };
+      const res = await instance.post("/evaluation", evaluation);
+
+      if (res.data) {
+        console.log('Avaliação salva.');
+        console.log(res);
+      } else {
+        console.log('Erro ao salvar avaliação');
+      }
+    } catch (error) {
+      console.error("Um erro ocorreu ao salvar a avaliação:", error);
     }
+
   };
 
   if (!quiz) {

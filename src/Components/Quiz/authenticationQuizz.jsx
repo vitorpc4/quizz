@@ -7,12 +7,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogDescription,
   DialogFooter,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import DOMPurify from 'dompurify';
 
 
 export default function AuthenticationQuizz({ open, onSetEmail }) {
@@ -25,14 +25,17 @@ export default function AuthenticationQuizz({ open, onSetEmail }) {
   }, []);
 
   const validateEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    return emailRegex.test(email);
   };
 
   const authenticateQuizz = () => {
     const newErrors = {};
-    if (!email.trim()) {
+    const sanitizedEmail = DOMPurify.sanitize(email.trim());
+
+    if (!sanitizedEmail) {
       newErrors.email = "E-mail é obrigatório";
-    } else if (!validateEmail(email)) {
+    } else if (!validateEmail(sanitizedEmail)) {
       newErrors.email = "Formato de e-mail inválido";
     }
 
@@ -43,12 +46,12 @@ export default function AuthenticationQuizz({ open, onSetEmail }) {
 
     setErrors({});
     setIsOpen(false);
-    onSetEmail(email);
+    onSetEmail(sanitizedEmail);
   };
 
   return (
     <Dialog open={isOpen}>
-      <DialogContent className="sm:max:w-[425px]">
+      <DialogContent className="sm:max:w-[425px] [&>button.absolute]:hidden">
         <DialogHeader>
           <DialogTitle>Antes de começar...</DialogTitle>
           <DialogDescription>

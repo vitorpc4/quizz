@@ -1,23 +1,55 @@
 import { NextResponse } from "next/server";
-import { login, logout, register } from "@/lib/auth";
+import { login, logout, register } from "@/services/auth";
+import { z } from "zod";
+
+const authSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("register"),
+    name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
+    email: z.string().email("Email inválido"),
+    password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+  }),
+  z.object({
+    type: z.literal("login"),
+    email: z.string().email(),
+    password: z.string().min(6)
+  }),
+  z.object({
+    type: z.literal("logout")
+  })
+]);
 
 export async function POST(request) {
   try {
-    const { name, email, password, type } = await request.json();
+    const requestData = await request.json();
 
-    switch (type) {
+    const validation = authSchema.safeParse(requestData);
+    if (!validation.success) {
+      const { error } = validation;
+
+      if (requestData.type === "register") {
+        return NextResponse.json({ errors: error.flatten().fieldErrors }, { status: 400 });
+      }
+
+      if (requestData.type === "login") {
+        return NextResponse.json(
+          { errors: "Credenciais inválidas" },
+          { status: 401 }
+        );
+      }
+      return NextResponse.json({ error: "Requisição inválida" }, { status: 400 });
+    }
+
+    const { data } = validation;
+
+    switch (data.type) {
       case "register":
-        if (!name || !email || !password) {
-          return NextResponse.json({ error: "Dados incompletos para registro." }, { status: 400 });
-        }
+        const { name, email, password } = data;
         const registerToken = await register(name, email, password);
         return NextResponse.json({ token: registerToken });
 
       case "login":
-        if (!email || !password) {
-          return NextResponse.json({ error: "Email e senha são obrigatórios." }, { status: 400 });
-        }
-        const loginResult = await login(email, password);
+        const loginResult = await login(data.email, data.password);
         return NextResponse.json({ result: loginResult });
 
       case "logout":
@@ -25,11 +57,16 @@ export async function POST(request) {
         return NextResponse.json({ message: "Logout realizado com sucesso." });
 
       default:
-        return NextResponse.json({ error: "Tipo de ação inválido." }, { status: 400 });
+        return NextResponse.json(
+          { error: "Tipo de ação inválido." },
+          { status: 400 }
+        );
     }
   } catch (err) {
     console.error("Erro na requisição:", err);
-    return NextResponse.json({ error: err.message || "Erro interno no servidor." }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message || "Erro interno no servidor." },
+      { status: 500 }
+    );
   }
 }
-
