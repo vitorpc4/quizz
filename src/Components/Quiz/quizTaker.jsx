@@ -97,15 +97,13 @@ export default function QuizTaker({ quizz, email }) {
       const res = await instance.post("/evaluation", evaluation);
 
       if (res.data) {
-        console.log('Avaliação salva.');
         console.log(res);
       } else {
-        console.log('Erro ao salvar avaliação');
+        console.log("Erro ao salvar avaliação");
       }
     } catch (error) {
       console.error("Um erro ocorreu ao salvar a avaliação:", error);
     }
-
   };
 
   if (!quiz) {
