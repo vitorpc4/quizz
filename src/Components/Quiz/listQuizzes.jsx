@@ -26,7 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { ChartNoAxesCombined, MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import instance from "@/http";
 import { toast } from "sonner";
@@ -78,6 +78,21 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
     {
       accessorKey: "name",
       header: "Name",
+    },
+    {
+      id: "evaluation",
+      header: "Avaliação",
+      cell: ({ row }) => {
+        const quizz = row.original;
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => router.push(`/evaluation/${quizz.id}`)}
+          >
+            <ChartNoAxesCombined />
+          </Button>
+        );
+      },
     },
     {
       id: "actions",
