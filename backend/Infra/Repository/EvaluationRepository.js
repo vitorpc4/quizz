@@ -8,7 +8,10 @@ export default class EvaluationRepository {
   }
 
   async getEvaluationById(id) {
-    return await db.select().from(EvaluationsTable).where(eq(EvaluationsTable.id, id));
+    return await db
+      .select()
+      .from(EvaluationsTable)
+      .where(eq(EvaluationsTable.id, id));
   }
 
   async createEvaluation(evaluation) {
@@ -20,5 +23,12 @@ export default class EvaluationRepository {
 
   async deleteEvaluation(id) {
     return await db.delete(EvaluationsTable).where(eq(EvaluationsTable.id, id));
+  }
+
+  async getEvaluationByQuizzId(id) {
+    return await db
+      .select()
+      .from(EvaluationsTable)
+      .where(eq(EvaluationsTable.quizId, id));
   }
 }
