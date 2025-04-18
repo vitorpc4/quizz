@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import SetNameQuizzDialog from "@/components/Quiz/setNameQuizz";
+import SetNameQuizzDialog from "@/Components/Quiz/SetNameQuizz";
 
 export default function QuizPage() {
   const [topic, setTopic] = useState("");
