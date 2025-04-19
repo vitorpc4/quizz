@@ -49,9 +49,11 @@ export default function StatisticsQuizz({ evaluations, participants }) {
           <CardTitle className="text-sm font-medium">Pontuação média</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{averageScore.toFixed(1)}</div>
+          <div className="text-2xl font-bold">
+            {averageScore ? averageScore.toFixed(1) : 0}
+          </div>
           <p className="text-xs text-muted-foreground">
-            de {evaluations.totalQuestions}
+            de {participants.length}
           </p>
         </CardContent>
       </Card>
@@ -60,9 +62,11 @@ export default function StatisticsQuizz({ evaluations, participants }) {
           <CardTitle className="text-sm font-medium">Nota mais alta</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{highestScore}</div>
+          <div className="text-2xl font-bold">
+            {participants.length > 0 ? highestScore : 0}
+          </div>
           <p className="text-xs text-muted-foreground">
-            de {evaluations.totalQuestions}
+            de {participants.length}
           </p>
         </CardContent>
       </Card>
@@ -71,9 +75,11 @@ export default function StatisticsQuizz({ evaluations, participants }) {
           <CardTitle className="text-sm font-medium">Menor Nota</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{lowestScore}</div>
+          <div className="text-2xl font-bold">
+            {participants.length > 0 ? lowestScore : 0}
+          </div>
           <p className="text-xs text-muted-foreground">
-            de {evaluations.totalQuestions}
+            de {participants.length}
           </p>
         </CardContent>
       </Card>
@@ -84,8 +90,10 @@ export default function StatisticsQuizz({ evaluations, participants }) {
         <CardContent>
           <div className="text-2xl font-bold">{perfectScores}</div>
           <p className="text-xs text-muted-foreground">
-            {((perfectScores / participants.length) * 100).toFixed(1)}% dos
-            participantes
+            {participants.length === 0
+              ? 0
+              : ((perfectScores / participants.length) * 100).toFixed(1)}
+            % dos participantes
           </p>
         </CardContent>
       </Card>

@@ -7,57 +7,146 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Trash2, GripVertical } from "lucide-react";
+import { Trash2, GripVertical, Pencil, Check, X } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ConfirmationDelete from "../ConfirmationDelete";
 
-export default function QuestionEditor({ question, onUpdate, onDelete }) {
+export default function QuestionEditor({
+  questionObject,
+  onUpdate,
+  onDelete,
+  setLockSave,
+}) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [questionObjectState, setQuestionObjectState] =
+    useState(questionObject);
+
   const [correctAnswerId, setCorrectAnswerId] = useState(() => {
-    const correctAnswer = question.answers.find((a) => a.isCorrect);
+    const correctAnswer = questionObject.answers.find((a) => a.isCorrect);
     return correctAnswer ? correctAnswer.id : "";
   });
 
-  // Update question text
-  const updateQuestionText = (text) => {
+  const [allowEditQuestion, setAllowEditQuestion] = useState(true);
+  const [tempQuestion, setTempQuestion] = useState();
+  const [changeStateAccordion, setChangeStateAccordion] = useState(true);
+
+  const updateQuestionText = (question) => {
     onUpdate({
-      ...question,
-      text,
+      ...questionObjectState,
+      question,
     });
   };
 
-  // Update answer text
-  const updateAnswerText = (answerId, text) => {
+  const updateAnswerText = (answerId, option) => {
     onUpdate({
-      ...question,
-      answers: question.answers.map((a) =>
-        a.id === answerId ? { ...a, text } : a
+      ...questionObjectState,
+      answers: questionObjectState.answers.map((a) =>
+        a.id === answerId ? { ...a, option } : a
+      ),
+    });
+
+    setQuestionObjectState({
+      ...questionObjectState,
+      answers: questionObjectState.answers.map((a) =>
+        a.id === answerId ? { ...a, option } : a
       ),
     });
   };
 
-  // Set correct answer
   const setCorrectAnswer = (answerId) => {
     setCorrectAnswerId(answerId);
+
+    setQuestionObjectState({
+      ...questionObjectState,
+      answers: questionObjectState.answers.map((a) => ({
+        ...a,
+        isCorrect: a.id === answerId,
+      })),
+    });
+
     onUpdate({
-      ...question,
-      answers: question.answers.map((a) => ({
+      ...questionObjectState,
+      answers: questionObjectState.answers.map((a) => ({
         ...a,
         isCorrect: a.id === answerId,
       })),
     });
   };
 
+  const toggleEditQuestion = () => {
+    setAllowEditQuestion(!allowEditQuestion);
+    setTempQuestion(questionObjectState.question);
+    setLockSave(true);
+    setChangeStateAccordion(!changeStateAccordion);
+  };
+
+  const unmakeChangesQuestion = () => {
+    setAllowEditQuestion(!allowEditQuestion);
+    setQuestionObjectState({
+      ...questionObjectState,
+      question: tempQuestion,
+    });
+
+    updateQuestionText(tempQuestion);
+    setTempQuestion("");
+    setLockSave(false);
+    setChangeStateAccordion(!changeStateAccordion);
+  };
+
+  const updateQuestionTextArea = (e) => {
+    updateQuestionText(e.target.value);
+    setQuestionObjectState({
+      ...questionObjectState,
+      question: e.target.value,
+    });
+  };
+
+  const saveChangesQuestion = () => {
+    setAllowEditQuestion(!allowEditQuestion);
+    setTempQuestion(questionObjectState.question);
+    setQuestionObjectState({
+      ...questionObjectState,
+      question: questionObjectState.question,
+    });
+    setLockSave(false);
+    setChangeStateAccordion(!changeStateAccordion);
+  };
+
+  const deleteQuestion = () => {
+    onDelete(questionObject.id);
+  };
+
+  useState(() => {
+    setQuestionObjectState(questionObject);
+  }, [questionObject]);
+
   return (
     <Card className="border border-muted">
       <CardHeader className="p-4 pb-0">
+        <div className="ml-4">
+          {allowEditQuestion ? (
+            <Button onClick={toggleEditQuestion} variant="ghost" size="sm">
+              <Pencil />
+            </Button>
+          ) : (
+            <>
+              <Button onClick={saveChangesQuestion} variant="ghost" size="sm">
+                <Check />
+              </Button>
+              <Button onClick={unmakeChangesQuestion} variant="ghost" size="sm">
+                <X />
+              </Button>
+            </>
+          )}
+        </div>
         <Accordion
           type="single"
-          collapsible
+          collapsible={changeStateAccordion}
           defaultValue="item-1"
           className="w-full"
         >
@@ -69,38 +158,22 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
               >
                 <div className="flex items-center gap-2 text-left">
                   <GripVertical className="h-5 w-5 text-muted-foreground" />
-                  <span className="font-medium">
-                    {question.question || "New Question"}
-                  </span>
+                  <Textarea
+                    value={questionObjectState.question}
+                    onChange={(e) => updateQuestionTextArea(e)}
+                    disabled={allowEditQuestion}
+                    className="max-w-[42rem] min-w-[42rem]"
+                  />
                 </div>
               </AccordionTrigger>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDelete(question.id)}
-                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Delete question</span>
-              </Button>
+              <div>
+                <ConfirmationDelete setDelete={deleteQuestion} />
+              </div>
             </div>
 
             <AccordionContent className="pt-4">
               <CardContent className="p-0 pb-4">
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor={`question-${question.id}`}>
-                      Question Text
-                    </Label>
-                    <Textarea
-                      id={`question-${question.id}`}
-                      value={question.option}
-                      onChange={(e) => updateQuestionText(e.target.value)}
-                      placeholder="Enter your question here"
-                      className="mt-1.5"
-                    />
-                  </div>
-
                   <div className="space-y-3">
                     <Label>Answer Options</Label>
                     <RadioGroup
@@ -108,7 +181,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }) {
                       onValueChange={setCorrectAnswer}
                       className="space-y-3"
                     >
-                      {question.answers.map((answer, index) => (
+                      {questionObjectState.answers.map((answer, index) => (
                         <div
                           key={answer.id}
                           className="flex items-start space-x-2"

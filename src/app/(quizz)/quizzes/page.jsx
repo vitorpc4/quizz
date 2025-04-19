@@ -1,6 +1,6 @@
 "use client";
 
-import ListQuizzesComponent from "@/components/Quiz/listQuizzes";
+import ListQuizzesComponent from "@/Components/Quiz/listQuizzes";
 import { Button } from "@/components/ui/button";
 import instance from "@/http";
 import { useRouter } from "next/navigation";

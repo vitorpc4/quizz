@@ -26,10 +26,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { ChartNoAxesCombined, MoreHorizontal } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  Link,
+  MoreHorizontal,
+  Pencil,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import instance from "@/http";
 import { toast } from "sonner";
+import ConfirmationDelete from "../ConfirmationDelete";
 
 export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
   const [sorting, setSorting] = useState([]);
@@ -53,8 +59,8 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
     }
   };
 
-  const generateLink = () => {
-    const link = `${window.location.origin}/takequizz/${quizzez[0].id}`;
+  const generateLink = (id) => {
+    const link = `${window.location.origin}/takequizz/${id}`;
 
     navigator.clipboard.writeText(link).then(
       () => {
@@ -82,6 +88,7 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
     {
       id: "evaluation",
       header: "Avaliação",
+      // TODO: Botão funciona, mas precisar melhor a usabilidade como por exemplo habilitar o click do meio ou o ctrl + click para abrir em nova aba
       cell: ({ row }) => {
         const quizz = row.original;
         return (
@@ -112,14 +119,19 @@ export default function ListQuizzesComponent({ quizzez, deletedQuizz }) {
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => router.push(`/quiz/${quizz.id}`)}
+                className="flex justify-center items-center"
               >
-                Edit
+                <Pencil />
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => deleteQuizz(quizz.id)}>
-                Deletar
-              </DropdownMenuItem>
+
+              <ConfirmationDelete
+                key="delete"
+                setDelete={() => deleteQuizz(quizz.id)}
+              />
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={generateLink}>
+              <DropdownMenuItem onClick={() => generateLink(quizz.id)}>
+                <Link />
                 Gerar Link
               </DropdownMenuItem>
             </DropdownMenuContent>
