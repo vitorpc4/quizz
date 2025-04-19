@@ -13,10 +13,21 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 // Send data for dad component
 
-export default function SetNameQuizzDialog({ onSetName, nameOnEdit, open }) {
+export default function SetNameQuizzDialog({
+  onSetName,
+  nameOnEdit,
+  open,
+  lockButton,
+}) {
   const [name, setName] = useState(nameOnEdit);
   const [errors, setErrors] = useState({});
   const [isOpen, setIsOpen] = useState(open);
@@ -48,9 +59,28 @@ export default function SetNameQuizzDialog({ onSetName, nameOnEdit, open }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsOpen(true)}>
-          Salvar
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className={lockButton ? "opacity-50 cursor-not-allowed" : ""}
+                variant="outline"
+                onClick={() => {
+                  lockButton ? setIsOpen(false) : setIsOpen(true);
+                }}
+              >
+                Salvar
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                {lockButton
+                  ? "Ainda há questões não salvas"
+                  : "Clique para salvar o quizz"}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </DialogTrigger>
       <DialogContent className="sm:max:w-[425px]">
         <DialogHeader>
