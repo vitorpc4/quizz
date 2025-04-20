@@ -35,7 +35,7 @@ export async function POST(request) {
       },
     ],
     generation_config: {
-      response_mime_type: "application/json"
+      response_mime_type: "application/json",
     },
   };
 
@@ -63,14 +63,12 @@ export async function POST(request) {
     }
 
     const data = await response.json();
-    console.log(data.candidates[0].content.parts[0].text);
 
     return NextResponse.json({
       questions: data.candidates[0].content.parts[0].text,
       message: "Success",
       success: true,
     });
-
   } catch (error) {
     console.error("Erro ao chamar a API Gemini:", error);
     return NextResponse.json({ message: error, success: false });
