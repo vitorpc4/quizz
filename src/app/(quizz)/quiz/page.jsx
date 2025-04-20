@@ -87,8 +87,6 @@ export default function QuizPage() {
         quiz: parsedJson.questions,
       };
 
-      console.log("quizz: ", quizz);
-
       setQuestions(quizz);
 
       setIsGenerating(false);
