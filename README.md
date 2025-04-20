@@ -1,3 +1,10 @@
+# Integrantes
+
+- Lorenzo Antônio Leite - RM357527
+- Vitor Henrique Laia Martins - RM357177
+- Fernando Caixeta do Amaral - RM357887
+- Ynara Resende de Faria - RM357404
+
 # Problema Identificado
 
 O sistema educacional público no Brasil enfrenta vários problemas, como:
