@@ -13,23 +13,13 @@ import {
 const items = [
   {
     title: "Home",
-    url: "/quiz",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Quizzes",
     url: "/quizzes",
     icon: MessageCircleQuestion,
-  },
-  {
-    title: "Users",
-    url: "#",
-    icon: Users,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 

@@ -143,8 +143,6 @@ export default function QuizzMainControl({ quizz }) {
       };
     });
 
-    console.log("questions: ", questions);
-
     saveQuizz(name);
   };
 
