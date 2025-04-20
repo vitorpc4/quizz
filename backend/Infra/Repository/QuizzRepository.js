@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { QuizzesTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export default class QuizzRepository {
   async getQuizzes() {
@@ -28,5 +28,16 @@ export default class QuizzRepository {
 
   async deleteQuiz(id) {
     return await db.delete(QuizzesTable).where(eq(QuizzesTable.id, id));
+  }
+
+  async createQuizzesAtLastMonth() {
+    return await db
+      .select({
+        total: sql`COUNT(*)`.as("total"),
+      })
+      .from(QuizzesTable)
+      .where(
+        sql`${QuizzesTable.createdDate} >= now() - interval '30 days' AND ${QuizzesTable.createdDate} <= now()`
+      );
   }
 }
