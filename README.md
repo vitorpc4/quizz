@@ -108,7 +108,7 @@ QuizSchool é uma aplicação desenvolvida para criar, gerenciar e realizar quiz
 
    ```sh
    git clone <url-do-repositorio>
-   cd quizschool
+   cd quizz
    ```
 
 2. Suba o banco de dados PostgreSQL com o docker compose:
