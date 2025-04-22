@@ -1,4 +1,4 @@
-import { Home, MessageCircleQuestion, Settings, Users } from "lucide-react";
+import { Home, MessageCircleQuestion } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,

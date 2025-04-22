@@ -1,46 +1,46 @@
-import { NextResponse } from "next/server";
-import EvaluationRepository from "../../../../../backend/Infra/Repository/EvaluationRepository";
-import QuizzRepository from "../../../../../backend/Infra/Repository/QuizzRepository";
+import { NextResponse } from 'next/server';
+import EvaluationRepository from '../../../../../backend/infra/repository/evaluation-repository';
+import QuizRepository from '../../../../../backend/infra/repository/quiz-repository';
 
 const evaluationRepository = new EvaluationRepository();
-const quizzRepository = new QuizzRepository();
+const quizRepository = new QuizRepository();
 
 export async function GET(req, { params }) {
   const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
-      { error: "ID do quiz não informado" },
+      { error: 'ID do quiz não informado' },
       { status: 400 }
     );
   }
 
-  const quizz = await quizzRepository.getQuizById(id);
+  const quiz = await quizRepository.getQuizById(id);
 
-  if (!quizz) {
-    return NextResponse.json({ error: "Quiz não encontrado" }, { status: 404 });
+  if (!quiz) {
+    return NextResponse.json({ error: 'Quiz não encontrado' }, { status: 404 });
   }
 
-  const evaluations = await evaluationRepository.getEvaluationByQuizzId(id);
+  const evaluations = await evaluationRepository.getEvaluationByQuizId(id);
 
   if (!evaluations) {
     return NextResponse.json(
-      { error: "Avaliação não encontrada" },
+      { error: 'Avaliação não encontrada' },
       { status: 404 }
     );
   }
 
-  const questions = quizz[0].quiz.map((question) => {
+  const questions = quiz[0].quiz.map(question => {
     return {
       id: question.id,
       question: question.question,
-      answers: question.answers.map((option) => {
+      answers: question.answers.map(option => {
         return {
           id: option.id,
           option: option.option,
-          isCorrect: option.isCorrect,
+          isCorrect: option.isCorrect
         };
-      }),
+      })
     };
   });
 
@@ -68,16 +68,16 @@ export async function GET(req, { params }) {
       email: evaluation.email,
       score: countTotalScore,
       completedAt: evaluation.createdDate,
-      totalQuestions: questions.length,
+      totalQuestions: questions.length
     });
   }
 
   const response = {
-    id: quizz[0].id,
-    name: quizz[0].name,
-    createDateQuizz: quizz[0].createdDate,
+    id: quiz[0].id,
+    name: quiz[0].name,
+    createDateQuiz: quiz[0].createdDate,
     totalQuestions: questions.length,
-    usersEvaluations: usersEvaluations,
+    usersEvaluations: usersEvaluations
   };
 
   return NextResponse.json(response, { status: 200 });

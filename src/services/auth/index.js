@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { encrypt } from "@/lib/jwt";
-import UserRepository from "../../../backend/Infra/Repository/UserRepository";
+import UserRepository from "../../../backend/infra/repository/user-repository";
 
 const userRepository = new UserRepository();
 

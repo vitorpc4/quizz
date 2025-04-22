@@ -1,16 +1,16 @@
-import { NextResponse } from "next/server";
-import { db } from "@/db/index";
-import QuizzRepository from "../../../../backend/Infra/Repository/QuizzRepository";
+import { NextResponse } from 'next/server';
+import { db } from '@/db/index';
+import QuizRepository from '../../../../backend/infra/repository/quiz-repository';
 
-const quizzRepository = new QuizzRepository();
+const quizRepository = new QuizRepository();
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
+  const userId = searchParams.get('userId');
 
   if (!userId) {
     return NextResponse.json(
-      { error: "userId não informado" },
+      { error: 'userId não informado' },
       { status: 400 }
     );
   }
@@ -27,7 +27,7 @@ export async function GET(req) {
     return NextResponse.json(quizzes);
   } catch (error) {
     return NextResponse.json(
-      { error: "Erro ao buscar quizzes do usuário" },
+      { error: 'Erro ao buscar quizzes do usuário' },
       { status: 500 }
     );
   }
@@ -38,17 +38,17 @@ export async function POST(req) {
   const { quiz, userId } = body;
 
   if (!quiz || !userId) {
-    return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
   }
 
   try {
-    const result = await quizzRepository.createQuiz(body);
+    const result = await quizRepository.createQuiz(body);
 
     return NextResponse.json(
       { id: result[0].id, success: true },
       { status: 201 }
     );
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao criar quiz" }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao criar quiz' }, { status: 500 });
   }
 }
