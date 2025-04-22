@@ -1,14 +1,14 @@
 services:
   db:
     image: postgres:16
-    container_name: quizzschool-db
+    container_name: quizschool-db
     restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: quizzschool
+      POSTGRES_DB: quizschool
     volumes:
       - db_data:/var/lib/postgresql/data
 

@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 import { decrypt } from "./lib/jwt";
 
 const PUBLIC_PATHS = [
   "/login",
   "/register",
   "/api/auth",
-  "/takequizz",
+  "/take-quiz",
   "/api/quiz",
   "/api/evaluation",
 ];
-
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function middleware(req) {
 

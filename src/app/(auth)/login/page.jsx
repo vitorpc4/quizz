@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import instance from "@/http";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
   const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -50,12 +51,12 @@ export default function LoginPage() {
           className="border p-2 rounded w-full"
           required
         />
-        <button
+        <Button
           type="submit"
           className="bg-gray-500 text-white p-2 rounded hover:bg-black transition-colors"
         >
           Entrar
-        </button>
+        </Button>
       </form>
       {loginError && (
         <p className="text-red-500 text-sm mt-4">{loginError}</p>

@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import QuizzRepository from "../../../../backend/Infra/Repository/QuizzRepository";
+import { NextResponse } from 'next/server';
+import QuizRepository from '../../../../backend/infra/repository/quiz-repository';
 
-const Repository = new QuizzRepository();
+const quizRepository = new QuizRepository();
 
 export async function GET(req) {
   try {
-    const quizzes = await Repository.getQuizzes();
+    const quizzes = await quizRepository.getQuizzes();
 
     if (!quizzes) {
       return NextResponse.json(
-        { error: "Nenhum quiz encontrado" },
+        { error: 'Nenhum quiz encontrado' },
         { status: 404 }
       );
     }
@@ -17,7 +17,7 @@ export async function GET(req) {
     return NextResponse.json(quizzes, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Erro ao buscar quizzes" },
+      { error: 'Erro ao buscar quizzes' },
       { status: 500 }
     );
   }

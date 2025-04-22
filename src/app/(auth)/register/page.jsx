@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import instance from "@/http";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -73,9 +74,9 @@ export default function RegisterPage() {
         {errors.password && (
           <span className="text-red-400 text-sm mt-1">{errors.password[0]}</span>
         )}
-        <button type="submit" className="bg-gray-500 text-white p-2 rounded hover:bg-black">
+        <Button type="submit" className="bg-gray-500 text-white p-2 rounded hover:bg-black">
           Cadastrar
-        </button>
+        </Button>
         {errors.form && (
           <div className="text-red-400 text-sm mt-2">{errors.form[0]}</div>
         )}

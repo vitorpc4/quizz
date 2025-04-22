@@ -39,7 +39,7 @@ O sistema é uma plataforma web que ajuda professores a criar quizzes usando int
 
 - Acessar o Quiz: Basta clicar no link compartilhado.
 - Registrar E-mail: Informar um e-mail para identificação.
-- Responder a Atividade: Realizar o quiz online.
+- Responder a Atividade: Realizar o Quiz online.
 
 #### Benefícios
 
@@ -73,20 +73,20 @@ QuizSchool é uma aplicação desenvolvida para criar, gerenciar e realizar quiz
 
 ### Diretórios Principais
 
-- **`src/Components`**: Contém os componentes reutilizáveis da aplicação, como botões, tabelas, gráficos e formulários.
 - **`src/app`**: Gerencia as páginas e rotas da aplicação, incluindo as páginas de quizzes, dashboard e autenticação.
-- **`backend/Infra/Repository`**: Contém os repositórios para interação com o banco de dados, como `QuizzRepository` e `EvaluationRepository`.
+- **`src/components`**: Contém os componentes reutilizáveis da aplicação, como botões, tabelas, gráficos e formulários.
+- **`backend/infra/repository`**: Contém os repositórios para interação com o banco de dados, como `QuizRepository` e `EvaluationRepository`.
 - **`src/http`**: Configuração de clientes HTTP para comunicação com APIs externas.
 - **`src/db`**: Configuração do banco de dados utilizando Drizzle ORM.
 
 ### Principais Componentes
 
-- **`QuizzMainControl`**: Gerencia a criação e edição de quizzes.
+- **`QuizMainControl`**: Gerencia a criação e edição de quizzes.
 - **`QuestionEditor`**: Interface para editar perguntas e respostas.
 - **`QuizTaker`**: Interface para os usuários realizarem quizzes.
-- **`EvaluationQuizz`**: Exibe estatísticas e participantes de quizzes.
-- **`ParticipantQuizz`**: Lista os participantes e suas pontuações.
-- **`StatisticsQuizz`**: Mostra gráficos e análises de desempenho.
+- **`EvaluationQuiz`**: Exibe estatísticas e participantes de quizzes.
+- **`ParticipantQuiz`**: Lista os participantes e suas pontuações.
+- **`StatisticsQuiz`**: Mostra gráficos e análises de desempenho.
 
 ### APIs
 
@@ -109,6 +109,7 @@ QuizSchool é uma aplicação desenvolvida para criar, gerenciar e realizar quiz
    ```sh
    git clone <url-do-repositorio>
    cd quizz
+   npm install
    ```
 
 2. Suba o banco de dados PostgreSQL com o docker compose:
@@ -118,16 +119,17 @@ QuizSchool é uma aplicação desenvolvida para criar, gerenciar e realizar quiz
    ```
 
 3. Execute as migrations do Drizzle:
+
    ```sh
    npx drizzle-kit push
    ```
 
 ### Prints da aplicação
 
-![Create quizz](images/AppQuizz.png)
-![List quizz](images/ListQuizz.png)
-![Evaluation quizz](images/EvaluationQuizz.png)
-![Edit quizz](images/EditQuizz.png)
-![dashboard](images/dashboard.png)
-![User Doing Quizz](images/UserDoingQuizz.png)
-![Result User](images/ResultUser.png)
+![Create Quiz](images/app-quiz.png)
+![List Quiz](images/list-quiz.png)
+![Evaluation Quiz](images/evaluation-quiz.png)
+![Edit Quiz](images/edit-quiz.png)
+![Dashboard](images/dashboard.png)
+![User Doing Quiz](images/user-doing-quiz.png)
+![Result User](images/result-user.png)

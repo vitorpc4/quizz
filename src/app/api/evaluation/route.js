@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import EvaluationRepository from "../../../../backend/Infra/Repository/EvaluationRepository";
+import EvaluationRepository from "../../../../backend/infra/repository/evaluation-repository";
 
 const evaluationRepository = new EvaluationRepository();
 
